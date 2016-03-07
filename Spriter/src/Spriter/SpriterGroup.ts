@@ -1,4 +1,4 @@
-module Spriter {
+﻿module Spriter {
 
     export class SpriterGroup extends Phaser.Group {
 
@@ -52,7 +52,7 @@ module Spriter {
             this._spriter = spriter;
             this._entityName = entityName;
             this._entity = spriter.getEntityByName(entityName);
-            this._textureKey = texutreKey;
+            this._textureKey = textureKey;
             this._autoChangeAnimation = autoChangeAnimation;
             this._loopsNumber = loopsNumber;
 
@@ -359,7 +359,10 @@ module Spriter {
                     this._finished = true;
                 } else {
                     this._time -= this._animation.length;
-                    this.onLoop.dispatch(this);
+                    if (this._autoChangeAnimation)
+                        this.nextAnimation();
+                    else
+                        this.onLoop.dispatch( this );
                 }
             }
 
@@ -416,13 +419,17 @@ module Spriter {
         }
         
         // -------------------------------------------------------------------------
-        public updateLines(): void {
-            for (var i = this._animation.linesLength - 1; i >= 0; i--) {
+        public updateLines(): void
+        {
+            for (var i = this._animation.linesLength - 1; i >= 0; i--)
+            {
                 var line = this._animation.getLineById(i);
                 var key: Key;
 
-                while ((key = line.step(this._time)) !== null) {
-                    switch (line.type) {
+                while ((key = line.step(this._time)) !== null)
+                {
+                    switch (line.type)
+                    {
                         case eTimelineType.SOUND_LINE:
                             //console.log("sound: " + line.name + " - key: " + key.id + ", time: " + key.time);
                             this.onSound.dispatch(this, line.name);
@@ -438,9 +445,11 @@ module Spriter {
                             var tagChanges = this._tags ^ tagsOn;
                             this._tags = tagsOn;
                             // go through all changes
-                            for (var j = 0; j < this._spriter.tagsLength; j++) {
+                            for (var j = 0; j < this._spriter.tagsLength; j++)
+                            {
                                 var mask = 1 << j;
-                                if (tagChanges & mask) {
+                                if (tagChanges & mask)
+                                {
                                     //console.log("tag change: " + this._spriter.getTagById(j).name + " value: " + ((tagsOn & mask) > 0) + " - key: " + key.id + ", time: " + key.time);
                                     this.onTagChange.dispatch(this, this._spriter.getTagById(j).name, (tagsOn & mask) > 0);
                                 }
@@ -459,37 +468,15 @@ module Spriter {
                     line.lastTime = key.time;
                 }
             }
-            
-        // -------------------------------------------------------------------------
-        public onLoop(): void
-        {
-            this._currentLoops++;
-            if (this._currentLoops >= this._loopsNumber)
-            {
-                this._pause = true;
-               // this.game.time.events.add(Phaser.Timer.SECOND * 2, () =>
-                //{
-                    this.nextAnimation();
-                    this._currentLoops = 0;
-                    this._pause = false;
-               // }, this);
-            }
-            // do nothing by default;
         }
 
         // -------------------------------------------------------------------------
         public nextAnimation(): void
         {
-            if ( this.currentAnimationId < this.animationCount - 1 )
-                this.setAnimationById( this.currentAnimationId + 1 );
+            if ( this.currentAnimationId < this.animationsCount - 1 )
+                this.playAnimationById( this.currentAnimationId + 1 );
             else
-                this.setAnimationById( 0 );
-        }
-        // -------------------------------------------------------------------------
-        public onFinished(): void {
-            if (this._listener !== null) {
-                this._listener.onAnimationFinished(this);
-            }
+                this.playAnimationById( 0 );
         }
     }
 }
