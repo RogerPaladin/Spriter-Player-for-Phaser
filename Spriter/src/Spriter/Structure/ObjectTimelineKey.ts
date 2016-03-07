@@ -1,4 +1,4 @@
-﻿/// <reference path="SpatialTimelineKey.ts" />
+/// <reference path="./SpatialTimelineKey.ts" />
 module Spriter {
 
     export class ObjectTimelineKey extends SpatialTimelineKey {

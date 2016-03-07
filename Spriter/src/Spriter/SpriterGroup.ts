@@ -1,4 +1,3 @@
-﻿/// <reference path="../../lib/phaser.d.ts" />
 module Spriter {
 
     export class SpriterGroup extends Phaser.Group {
@@ -8,6 +7,7 @@ module Spriter {
 
         private _entityName: string;
         private _currentAnimationName: string;
+        private _currentAnimationId: number;
         private _animation: Animation;
         private _animationSpeed: number;
 
@@ -22,18 +22,23 @@ module Spriter {
 
         private _pause: boolean = false;
         private _finished: boolean;
+        private _autoChangeAnimation: boolean;
+        private _loopsNumber: number;
+        private _currentLoops: number = 0;
 
         private _listener: ISpriterGroupListener = null;
 
         // -------------------------------------------------------------------------
         constructor(aGame: Phaser.Game, aSpriter: Spriter, aTextureKey: string, aEntityName: string,
-            aAnimation?: string | number, aAnimationSpeedPercent?: number) {
+            aAnimation?: string | number, aAnimationSpeedPercent?: number, autoChangeAnimation?: boolean, loopsNumber?: number) {
 
             super(aGame, null);
 
             this._spriter = aSpriter;
             this._entityName = aEntityName;
             this._textureKey = aTextureKey;
+            this._autoChangeAnimation = autoChangeAnimation;
+            this._loopsNumber = loopsNumber;
 
             this._root = new SpatialInfo();
 
@@ -47,9 +52,9 @@ module Spriter {
             // set animation
             if (aAnimation === undefined || aAnimation === null) {
                 // set first animation
-                this.setAnimationById(0);
+                this.setAnimationById( 0 );
             } else if (typeof aAnimation === "number") {
-                this.setAnimationById(aAnimation);
+                this.setAnimationById( aAnimation );
             } else {
                 this.setAnimationByName(aAnimation);
             }
@@ -71,6 +76,12 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
+        public get currentAnimationId(): number
+        {
+            return this._currentAnimationId;
+        }
+
+        // -------------------------------------------------------------------------
         public setAnimationSpeedPercent(aAnimationSpeedPercent: number = 100) {
             this._animationSpeed = aAnimationSpeedPercent / 100;
         }
@@ -84,7 +95,7 @@ module Spriter {
                 return;
             }
 
-            this.setAnimation(animation);
+            this.setAnimation( animation );
         }
 
         // -------------------------------------------------------------------------
@@ -102,7 +113,8 @@ module Spriter {
         // -------------------------------------------------------------------------
         private setAnimation(aAnimation: Animation): void{
             this._currentAnimationName = aAnimation.name;
-            this._animation = aAnimation
+            this._currentAnimationId = aAnimation.id;
+            this._animation = aAnimation;
 
             this._finished = false;
 
@@ -276,10 +288,30 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public onLoop(): void {
+        public onLoop(): void
+        {
+            this._currentLoops++;
+            if (this._currentLoops >= this._loopsNumber)
+            {
+                this._pause = true;
+               // this.game.time.events.add(Phaser.Timer.SECOND * 2, () =>
+                //{
+                    this.nextAnimation();
+                    this._currentLoops = 0;
+                    this._pause = false;
+               // }, this);
+            }
             // do nothing by default;
         }
 
+        // -------------------------------------------------------------------------
+        public nextAnimation(): void
+        {
+            if ( this.currentAnimationId < this.animationCount - 1 )
+                this.setAnimationById( this.currentAnimationId + 1 );
+            else
+                this.setAnimationById( 0 );
+        }
         // -------------------------------------------------------------------------
         public onFinished(): void {
             if (this._listener !== null) {

@@ -1,13 +1,16 @@
 ﻿module Spriter {
 
-    export abstract class SpriterFile {
+    export class SpriterFile {
 
         protected _minimized: boolean;
         private _minDefs: any;
         private _minDefsStack: any[];
 
         // -------------------------------------------------------------------------
-        public abstract getNodes(aNodeName: string): ISpriterNodeList;
+        public getNodes(aNodeName: any): ISpriterNodeList
+        {
+            return aNodeName;
+        }
 
         // -------------------------------------------------------------------------
         public processed(): void {
@@ -31,8 +34,8 @@
 
         // -------------------------------------------------------------------------
         protected getFileNameWithoutExtension(aPath: string): string {
-            var name = (aPath.split('\\').pop().split('/').pop().split('.'))[0];
-            return name;
+            //var name = (aPath.split('\\').pop().split('/').pop().split('.'))[0];
+            return aPath;
         }
 
         // -------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-﻿/// <reference path="SpriterFile.ts" />
+/// <reference path="./SpriterFile.ts" />
 module Spriter {
 
     export class SpriterBin extends SpriterFile {

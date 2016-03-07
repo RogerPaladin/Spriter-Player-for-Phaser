@@ -1,4 +1,4 @@
-﻿/// <reference path="SpriterBone.ts" />
+/// <reference path="./SpriterBone.ts" />
 module Spriter {
 
     export class SpriterObject extends SpriterBone {
