@@ -197,7 +197,7 @@ module Spriter {
                 return;
             }
 
-            this.setAnimation( animation );
+            this.playAnimation( animation );
         }
 
         // -------------------------------------------------------------------------
