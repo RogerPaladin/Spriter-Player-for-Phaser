@@ -1,24 +1,6 @@
-<<<<<<< HEAD
-module Spriter {
-=======
 ﻿module Spriter {
->>>>>>> refs/remotes/SBCGames/master
 
     export class SpriterGroup extends Phaser.Group {
-
-        // onLoop(SpriterGroup);
-        public onLoop: Phaser.Signal = new Phaser.Signal();
-        // onFinish(SpriterGroup);
-        public onFinish: Phaser.Signal = new Phaser.Signal();
-
-        // onSound(SpriterGroup, string); // string for line name which equals soud name without extension
-        public onSound: Phaser.Signal = new Phaser.Signal();
-        // onEvent(SpriterGroup, string); // string for line name which equals event name
-        public onEvent: Phaser.Signal = new Phaser.Signal();
-        // onTagChange(SpriterGroup, string, boolean); // string for tag name, boolean for change (true = set / false = unset)
-        public onTagChange: Phaser.Signal = new Phaser.Signal();
-        // onVariableSet(SpriterGroup, Variable); // Variable is Spriter variable def with access to value
-        public onVariableSet: Phaser.Signal = new Phaser.Signal();
 
         // onLoop(SpriterGroup);
         public onLoop: Phaser.Signal = new Phaser.Signal();
@@ -39,10 +21,6 @@ module Spriter {
 
         private _entity: Entity;
         private _entityName: string;
-<<<<<<< HEAD
-        private _currentAnimationId: number;
-=======
->>>>>>> refs/remotes/SBCGames/master
         private _animation: Animation;
         private _animationName: string;
         private _animationSpeed: number;
@@ -60,20 +38,10 @@ module Spriter {
 
         private _paused: boolean = false;
         private _finished: boolean;
-<<<<<<< HEAD
-        private _autoChangeAnimation: boolean;
-        private _loopsNumber: number;
-        private _currentLoops: number = 0;
-=======
->>>>>>> refs/remotes/SBCGames/master
 
         // -------------------------------------------------------------------------
         constructor(game: Phaser.Game, spriter: Spriter, texutreKey: string, entityName: string,
-<<<<<<< HEAD
-            animation?: string | number, animationSpeedPercent?: number, autoChangeAnimation?: boolean, loopsNumber?: number) {
-=======
             animation?: string | number, animationSpeedPercent?: number) {
->>>>>>> refs/remotes/SBCGames/master
 
             super(game, null);
 
@@ -81,11 +49,6 @@ module Spriter {
             this._entityName = entityName;
             this._entity = spriter.getEntityByName(entityName);
             this._textureKey = texutreKey;
-<<<<<<< HEAD
-            this._autoChangeAnimation = autoChangeAnimation;
-            this._loopsNumber = loopsNumber;
-=======
->>>>>>> refs/remotes/SBCGames/master
 
             this._root = new SpatialInfo();
 
@@ -107,15 +70,9 @@ module Spriter {
             // set animation
             if (animation === undefined || animation === null) {
                 // set first animation
-<<<<<<< HEAD
-                this.playAnimationById( 0 );
-            } else if (typeof animation === "number") {
-                this.playAnimationById( animation );
-=======
                 this.playAnimationById(0);
             } else if (typeof animation === "number") {
                 this.playAnimationById(animation);
->>>>>>> refs/remotes/SBCGames/master
             } else {
                 this.playAnimationByName(animation);
             }
@@ -212,15 +169,6 @@ module Spriter {
             }
 
             return null;
-<<<<<<< HEAD
-        }
-
-        // -------------------------------------------------------------------------
-        public get currentAnimationId(): number
-        {
-            return this._currentAnimationId;
-=======
->>>>>>> refs/remotes/SBCGames/master
         }
 
         // -------------------------------------------------------------------------
@@ -237,11 +185,7 @@ module Spriter {
                 return;
             }
 
-<<<<<<< HEAD
-            this.playAnimation( animation );
-=======
             this.playAnimation(animation);
->>>>>>> refs/remotes/SBCGames/master
         }
 
         // -------------------------------------------------------------------------
@@ -259,12 +203,7 @@ module Spriter {
         // -------------------------------------------------------------------------
         private playAnimation(aAnimation: Animation): void{
             this._animationName = aAnimation.name;
-<<<<<<< HEAD
-            this._currentAnimationId = aAnimation.id;
-            this._animation = aAnimation;
-=======
             this._animation = aAnimation
->>>>>>> refs/remotes/SBCGames/master
 
             this._finished = false;
 
@@ -463,7 +402,7 @@ module Spriter {
             }
         }
 
-		// -------------------------------------------------------------------------
+        // -------------------------------------------------------------------------
         public updateLines(): void {
             for (var i = this._animation.linesLength - 1; i >= 0; i--) {
                 var line = this._animation.getLineById(i);
@@ -506,82 +445,6 @@ module Spriter {
 
                     line.lastTime = key.time;
                 }
-        // -------------------------------------------------------------------------
-<<<<<<< HEAD
-        public onLoop(): void
-        {
-            this._currentLoops++;
-            if (this._currentLoops >= this._loopsNumber)
-            {
-                this._pause = true;
-               // this.game.time.events.add(Phaser.Timer.SECOND * 2, () =>
-                //{
-                    this.nextAnimation();
-                    this._currentLoops = 0;
-                    this._pause = false;
-               // }, this);
-            }
-            // do nothing by default;
-        }
-=======
-        public updateLines(): void {
-            for (var i = this._animation.linesLength - 1; i >= 0; i--) {
-                var line = this._animation.getLineById(i);
-                var key: Key;
->>>>>>> refs/remotes/SBCGames/master
-
-<<<<<<< HEAD
-        // -------------------------------------------------------------------------
-        public nextAnimation(): void
-        {
-            if ( this.currentAnimationId < this.animationCount - 1 )
-                this.setAnimationById( this.currentAnimationId + 1 );
-            else
-                this.setAnimationById( 0 );
-        }
-        // -------------------------------------------------------------------------
-        public onFinished(): void {
-            if (this._listener !== null) {
-                this._listener.onAnimationFinished(this);
-=======
-                while ((key = line.step(this._time)) !== null) {
-                    switch (line.type) {
-                        case eTimelineType.SOUND_LINE:
-                            //console.log("sound: " + line.name + " - key: " + key.id + ", time: " + key.time);
-                            this.onSound.dispatch(this, line.name);
-                            break;
-
-                        case eTimelineType.EVENT_LINE:
-                            //console.log("event: " + line.name + " - key: " + key.id + ", time: " + key.time);
-                            this.onEvent.dispatch(this, line.name);
-                            break;
-
-                        case eTimelineType.TAG_LINE:
-                            var tagsOn = (<KeyTag>key).tagsOn;
-                            var tagChanges = this._tags ^ tagsOn;
-                            this._tags = tagsOn;
-                            // go through all changes
-                            for (var j = 0; j < this._spriter.tagsLength; j++) {
-                                var mask = 1 << j;
-                                if (tagChanges & mask) {
-                                    //console.log("tag change: " + this._spriter.getTagById(j).name + " value: " + ((tagsOn & mask) > 0) + " - key: " + key.id + ", time: " + key.time);
-                                    this.onTagChange.dispatch(this, this._spriter.getTagById(j).name, (tagsOn & mask) > 0);
-                                }
-                            }
-                            break;
-
-                        case eTimelineType.VAR_LINE:
-                            var newVal = (<KeyVariable>key).value;
-                            var variable = this._vars[(<Varline>line).varDefId];
-                            variable.value = newVal;
-                            //console.log("var set: " + variable.name + " value: " + variable.value + " - key: " + key.id + ", time: " + key.time);
-                            this.onVariableSet.dispatch(this, variable);
-                            break;
-                    }
-
-                    line.lastTime = key.time;
-                }
->>>>>>> refs/remotes/SBCGames/master
             }
         }
     }
