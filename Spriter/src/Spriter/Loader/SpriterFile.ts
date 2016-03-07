@@ -2,18 +2,27 @@
 
     export enum eFileType { XML, JSON, BIN }
 
+<<<<<<< HEAD
     export class SpriterFile {
+=======
+    export abstract class SpriterFile {
+>>>>>>> refs/remotes/SBCGames/master
 
         protected _minimized: boolean;
         private _minDefs: any;
         private _minDefsStack: any[];
 
         // -------------------------------------------------------------------------
+<<<<<<< HEAD
         public getNodes(NodeName: any): ISpriterNodeList
         {
             return NodeName;
         }
         
+=======
+        public abstract getNodes(nodeName: string): ISpriterNodeList;
+
+>>>>>>> refs/remotes/SBCGames/master
         // -------------------------------------------------------------------------
         public abstract getType(): eFileType;
 
@@ -38,9 +47,15 @@
         }
 
         // -------------------------------------------------------------------------
+<<<<<<< HEAD
         protected getFileNameWithoutExtension(aPath: string): string {
             //var name = (aPath.split('\\').pop().split('/').pop().split('.'))[0];
             return aPath;
+=======
+        protected getFileNameWithoutExtension(path: string): string {
+            var name = (path.split('\\').pop().split('/').pop().split('.'))[0];
+            return name;
+>>>>>>> refs/remotes/SBCGames/master
         }
 
         // -------------------------------------------------------------------------

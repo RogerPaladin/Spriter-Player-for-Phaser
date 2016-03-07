@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /// <reference path="./SpriterFile.ts" />
+=======
+﻿/// <reference path="SpriterFile.ts" />
+>>>>>>> refs/remotes/SBCGames/master
 
 module Spriter {
 
