@@ -1,28 +1,38 @@
-﻿/// <reference path="Item.ts" />
+﻿module Spriter {
 
-module Spriter {
+    export class File {
 
-    export class File extends Item {
-
-        private _pivotX: number;
-        private _pivotY: number;
+        private _id: number;
+        private _name: string;
+        private _anchorX: number;
+        private _anchorY: number;
 
         // -------------------------------------------------------------------------
-        constructor(id: number, name: string, pivotX: number, pivotY: number) {
-            super(id, name);
-
-            this._pivotX = pivotX;
-            this._pivotY = pivotY;
+        constructor(aId: number, aName: string, aAnchorX: number, aAnchorY: number) {
+            this._id = aId;
+            this._name = aName;
+            this._anchorX = aAnchorX;
+            this._anchorY = aAnchorY;
+        }
+        
+        // -------------------------------------------------------------------------
+        public get id(): number {
+            return this._id;
         }
 
         // -------------------------------------------------------------------------
-        public get pivotX(): number {
-            return this._pivotX;
+        public get name(): string {
+            return this._name;
         }
 
         // -------------------------------------------------------------------------
-        public get pivotY(): number {
-            return this._pivotY;
+        public get anchorX(): number {
+            return this._anchorX;
+        }
+
+        // -------------------------------------------------------------------------
+        public get anchorY(): number {
+            return this._anchorY;
         }
     }
 }

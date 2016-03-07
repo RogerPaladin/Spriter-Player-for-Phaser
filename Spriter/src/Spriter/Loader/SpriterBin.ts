@@ -1,5 +1,4 @@
-﻿/// <reference path="SpriterFile.ts" />
-
+/// <reference path="./SpriterFile.ts" />
 module Spriter {
 
     export class SpriterBin extends SpriterFile {
@@ -127,16 +126,11 @@ module Spriter {
         private _tmpPosition: number;
 
         // -------------------------------------------------------------------------
-        constructor(binData: ArrayBuffer) {
+        constructor(aBinData: ArrayBuffer) {
             super();
 
-            this._bin = new DataView(binData);
+            this._bin = new DataView(aBinData);
             this._smallOffset = this._bin.getUint8(0) === 1;
-        }
-
-        // -------------------------------------------------------------------------
-        public getType(): eFileType {
-            return eFileType.BIN;
         }
 
         // -------------------------------------------------------------------------
@@ -201,26 +195,26 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getNodes(nodeName: string): ISpriterNodeList {
-            return new NodeListBin(this, this.getSubNodesOfElementType(1, this._elements[nodeName]));
+        public getNodes(aNodeName: string): ISpriterNodeList {
+            return new NodeListBin(this, this.getSubNodesOfElementType(1, this._elements[aNodeName]));
         }
 
         // -------------------------------------------------------------------------
-        public getNodesForElement(elementPosition: number, nodeName: string): ISpriterNodeList {
-            return new NodeListBin(this, this.getSubNodesOfElementType(elementPosition, this._elements[nodeName]));
+        public getNodesForElement(aElementPosition: number, aNodeName: string): ISpriterNodeList {
+            return new NodeListBin(this, this.getSubNodesOfElementType(aElementPosition, this._elements[aNodeName]));
         }
 
         // -------------------------------------------------------------------------
-        private getSubNodesOfElementType(positon: number, elementType: number): number[] {
+        private getSubNodesOfElementType(aPosition: number, aElementType: number): number[] {
             var result: number[] = [];
-            var subelementsCount = this._bin.getUint8(positon + 1);
-            positon += 2;
+            var subelementsCount = this._bin.getUint8(aPosition + 1);
+            aPosition += 2;
 
             for (var i = 0; i < subelementsCount; i++) {
-                var subelementOffset = this._smallOffset ? this._bin.getUint16(positon + i * 2, true) : this._bin.getUint32(positon + i * 4, true);
-                var subelementType = this._bin.getUint8(positon + subelementOffset);
-                if (subelementType === elementType) {
-                    result.push(positon + subelementOffset);
+                var subelementOffset = this._smallOffset ? this._bin.getUint16(aPosition + i * 2, true) : this._bin.getUint32(aPosition + i * 4, true);
+                var subelementType = this._bin.getUint8(aPosition + subelementOffset);
+                if (subelementType === aElementType) {
+                    result.push(aPosition + subelementOffset);
                 }
             }
 
@@ -228,14 +222,14 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        private getAttribsPosition(position: number): number {
-            var subelementsCount = this._bin.getUint8(position + 1)
-            return position + 2 + subelementsCount * (this._smallOffset ? 2 : 4);
+        private getAttribsPosition(aPosition: number): number {
+            var subelementsCount = this._bin.getUint8(aPosition + 1)
+            return aPosition + 2 + subelementsCount * (this._smallOffset ? 2 : 4);
         }
 
         // -------------------------------------------------------------------------
-        public getFolder(position: number): Folder {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getFolder(aPosition: number): Folder {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var id = 0;
             var name = "";
@@ -256,10 +250,8 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getFile(position: number): File {
-            console.log("skip sound loading");
-
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getFile(aPosition: number): File {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var id = 0;
             var name = "";
@@ -295,14 +287,8 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getTag(position: number): Item {
-            console.error("implement loading Tag");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getEntity(position: number): Entity {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getEntity(aPosition: number): Entity {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var id = 0;
             var name = "";
@@ -323,8 +309,8 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getObjectInfo(position: number, index: number): ObjectInfo {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getObjectInfo(aPosition: number, aIndex: number): ObjectInfo {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var name = "";
             var type = eObjectType.SPRITE;
@@ -353,33 +339,12 @@ module Spriter {
                 }
             }
 
-
-            console.error("add loading of pivots");
-
-            return new ObjectInfo(index, name, type, width, height, 0, 0);
+            return new ObjectInfo(aIndex, name, type, width, height);
         }
 
         // -------------------------------------------------------------------------
-        public getCharMap(position: number): CharMap {
-            console.error("add loading of charmaps");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getCharMapEntry(position: number, charMap: CharMap, spriter: Spriter): void {
-            console.error("add loading of charmap entries");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getVariable(position: number): Variable {
-            console.error("add loading of variables");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getAnimation(position: number): Animation {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getAnimation(aPosition: number): Animation {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var id = 0;
             var name = "";
@@ -416,16 +381,16 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getMainlineKey(position: number): KeyMainline {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getMainLineKey(aPosition: number): MainLineKey {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
-            var id = 0;
             var time = 0;
 
             for (var i = this._bin.getUint8(this._tmpPosition++) - 1; i >= 0; i--) {
                 switch (this._bin.getUint8(this._tmpPosition++)) {
                     case SpriterBin.ATTR_MAINLINE_KEY_ID:
-                        id = this.readUint8();
+                        // skip
+                        this._tmpPosition++;
                         break;
 
                     case SpriterBin.ATTR_MAINLINE_KEY_TIME:
@@ -434,12 +399,12 @@ module Spriter {
                 }
             }
 
-            return new KeyMainline(id, time);
+            return new MainLineKey(time);
         }
 
         // -------------------------------------------------------------------------
-        public getRef(position: number): Ref {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getRef(aPosition: number): Ref {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var id = 0;
             var parent = -1;
@@ -506,10 +471,8 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getTimeline(position: number): Timeline {
-            console.error("add loading of all types of objects");
-
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getTimeline(aPosition: number): Timeline {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var id = 0;
             var name = "";
@@ -542,38 +505,8 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public getBaseline(position: number): Baseline {
-            console.error("add loading of baselines");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getVarline(position: number): Varline {
-            console.error("add loading of varlines");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getKey(position: number): Key {
-            console.error("add loading of keys");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getTagKey(position: number): KeyTag {
-            console.error("add loading of tag keys");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getVariableKey(position: number, type: eVariableType): KeyVariable {
-            console.error("add loading of variable keys");
-            return null;
-        }
-
-        // -------------------------------------------------------------------------
-        public getTimelineKey(position: number, index: number, spriter: Spriter): KeyTimeline {
-            this._tmpPosition = this.getAttribsPosition(position);
+        public getTimelineKey(aPosition: number, aIndex: number, aSpriter: Spriter): TimelineKey {
+            this._tmpPosition = this.getAttribsPosition(aPosition);
 
             var time = 0;
             var spin = 1;
@@ -615,19 +548,19 @@ module Spriter {
 
 
             // get child element
-            position += 2
-            var offset = position + (this._smallOffset ? this._bin.getUint16(position, true) : this._bin.getUint32(position, true));
+            aPosition += 2
+            var offset = aPosition + (this._smallOffset ? this._bin.getUint16(aPosition, true) : this._bin.getUint32(aPosition, true));
             var elementType = this._bin.getUint8(offset);
 
-            var key: KeyTimeline = null;
+            var key: TimelineKey = null;
             var keyDataElm = null;
 
             var sprite: boolean = false;
 
             if (elementType === 14 /* bone */) {
-                key = new KeyBone(index, time, spin);
+                key = new BoneTimelineKey(aIndex, time, spin);
             } else if (elementType === 15 /* object */) {
-                key = new KeyObject(index, time, spin);
+                key = new ObjectTimelineKey(aIndex, time, spin);
                 sprite = true;
             }
 
@@ -639,7 +572,7 @@ module Spriter {
 
             this._tmpPosition = this.getAttribsPosition(offset);
             // spatial info
-            var info = key.info;
+            var info = (<SpatialTimelineKey>key).info;
 
             info.x = 0; //this.parseFloat(keyDataElm, "x");
             info.y = 0; //-this.parseFloat(keyDataElm, "y");
@@ -707,21 +640,15 @@ module Spriter {
             }
 
             if (sprite) {
-                (<KeyObject>key).setFolderAndFile(folder, file);
+                (<ObjectTimelineKey>key).setFolderAndFile(folder, file);
                 // set pivot in spatial info different from default (based on pivot in file)
-                var fileObj = spriter.getFolderById(folder).getFileById(file);
-                info.pivotX = hasPivotX ? pivotX : fileObj.pivotX;
+                var fileObj = aSpriter.getFolderById(folder).getFileById(file);
+                info.pivotX = hasPivotX ? pivotX : fileObj.anchorX;
                 // 1 - to flip Y, default anchor is already flipped, so it needs to be flipped back to avoid double flipping
-                info.pivotY = 1 - (hasPivotY ? pivotY : 1 - fileObj.pivotY);
+                info.pivotY = 1 - (hasPivotY ? pivotY : 1 - fileObj.anchorY);
             }
 
             return key;
-        }
-
-        // -------------------------------------------------------------------------
-        public getTagChange(position: number): number {
-            console.error("add loading of tag changes");
-            return null;
         }
     }
 }

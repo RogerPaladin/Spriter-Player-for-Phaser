@@ -1,29 +1,35 @@
-﻿/// <reference path="Item.ts" />
+﻿module Spriter {
 
-module Spriter {
+    export class ObjectInfo {
 
-    export class ObjectInfo extends Item {
-
+        private _id: number;
         private _type: eObjectType;
+        private _name: string;
         private _width: number;
         private _height: number;
-        private _pivotX: number;
-        private _pivotY: number;
 
         // -------------------------------------------------------------------------
-        constructor(id: number, name: string, type: eObjectType, width: number, height: number, pivotX: number, pivotY: number) {
-            super(id, name);
+        constructor(aId: number, aName: string, aType: eObjectType, aWidth: number, aHeight: number) {
+            this._id = aId;
+            this._type = aType;
+            this._name = aName;
+            this._width = aWidth;
+            this._height = aHeight;
+        }
 
-            this._type = type;
-            this._width = width;
-            this._height = height;
-            this._pivotX = pivotX;
-            this._pivotY = pivotY;
+        // -------------------------------------------------------------------------
+        public get id(): number {
+            return this._id;
         }
 
         // -------------------------------------------------------------------------
         public get type(): eObjectType {
             return this._type;
+        }
+
+        // -------------------------------------------------------------------------
+        public get name(): string {
+            return this._name;
         }
 
         // -------------------------------------------------------------------------
@@ -34,16 +40,6 @@ module Spriter {
         // -------------------------------------------------------------------------
         public get height(): number {
             return this._height;
-        }
-
-        // -------------------------------------------------------------------------
-        public get pivotX(): number {
-            return this._pivotX;
-        }
-
-        // -------------------------------------------------------------------------
-        public get pivotY(): number {
-            return this._pivotY;
         }
     }
 }

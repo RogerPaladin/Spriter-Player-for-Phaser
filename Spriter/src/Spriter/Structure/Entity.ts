@@ -1,98 +1,65 @@
-﻿/// <reference path="../IdNameMap.ts" />
-/// <reference path="Item.ts" />
+﻿module Spriter {
 
-module Spriter {
+    export class Entity {
 
-    export class Entity extends Item {
+        private _id: number;
+        private _name: string;
 
-        private _objectInfos: IdNameMap<ObjectInfo>;
-        private _charMaps: IdNameMap<CharMap>
-        private _variables: IdNameMap<Variable>;
-        private _animations: IdNameMap<Animation>;
+        private _objectInfos: Helper.IdNameMap<ObjectInfo>;
+        private _animations: Helper.IdNameMap<Animation>;
         
         // -------------------------------------------------------------------------
-        constructor(id: number, name: string) {
-            super(id, name);
+        constructor(aId: number, aName: string) {
+            this._id = aId;
+            this._name = aName;
 
-            this._objectInfos = new IdNameMap<ObjectInfo>();
-            this._charMaps = new IdNameMap<CharMap>();
-            this._variables = new IdNameMap<Variable>();
-            this._animations = new IdNameMap<Animation>();
+            this._objectInfos = new Helper.IdNameMap<ObjectInfo>();
+            this._animations = new Helper.IdNameMap<Animation>();
         }
 
         // -------------------------------------------------------------------------
-        public addObjectInfo(objectInfo: ObjectInfo): void {
-            this._objectInfos.add(objectInfo, objectInfo.id, objectInfo.name);
+        public addObjectInfo(aObjectInfo: ObjectInfo): void {
+            this._objectInfos.add(aObjectInfo, aObjectInfo.id, aObjectInfo.name);
         }
 
         // -------------------------------------------------------------------------
-        public getObjectInfoById(id: number): ObjectInfo {
-            return this._objectInfos.getById(id);
+        public getObjectInfoById(aId: number): ObjectInfo {
+            return this._objectInfos.getById(aId);
         }
 
         // -------------------------------------------------------------------------
-        public getObjectInfoByName(name: string): ObjectInfo {
-            return this._objectInfos.getByName(name);
+        public getObjectInfoByName(aName: string): ObjectInfo {
+            return this._objectInfos.getByName(aName);
         }
 
         // -------------------------------------------------------------------------
-        public addCharMap(charMap: CharMap): void {
-            this._charMaps.add(charMap, charMap.id, charMap.name);
+        public addAnimation(aAnimation: Animation): void {
+            this._animations.add(aAnimation, aAnimation.id, aAnimation.name);
         }
 
         // -------------------------------------------------------------------------
-        public getCharMapById(id: number): CharMap {
-            return this._charMaps.getById(id);
+        public getAnimationById(aId: number): Animation {
+            return this._animations.getById(aId);
         }
 
         // -------------------------------------------------------------------------
-        public getCharMapByName(name: string): CharMap {
-            return this._charMaps.getByName(name);
+        public getAnimationByName(aName: string): Animation {
+            return this._animations.getByName(aName);
         }
 
         // -------------------------------------------------------------------------
-        public get charMapsLength(): number {
-            return this._charMaps.length;
-        }
-
-        // -------------------------------------------------------------------------
-        public addVariable(variable: Variable): void {
-            this._variables.add(variable, variable.id, variable.name);
-        }
-
-        // -------------------------------------------------------------------------
-        public getVariableById(id: number): Variable {
-            return this._variables.getById(id);
-        }
-
-        // -------------------------------------------------------------------------
-        public getVariableByName(name: string): Variable {
-            return this._variables.getByName(name);
-        }
-
-        // -------------------------------------------------------------------------
-        public get variablesLength(): number {
-            return this._variables.length;
-        }
-
-        // -------------------------------------------------------------------------
-        public addAnimation(animation: Animation): void {
-            this._animations.add(animation, animation.id, animation.name);
-        }
-
-        // -------------------------------------------------------------------------
-        public getAnimationById(id: number): Animation {
-            return this._animations.getById(id);
-        }
-
-        // -------------------------------------------------------------------------
-        public getAnimationByName(name: string): Animation {
-            return this._animations.getByName(name);
-        }
-
-        // -------------------------------------------------------------------------
-        public get animationsLength(): number {
+        public get animationsCount(): number {
             return this._animations.length;
+        }
+
+        // -------------------------------------------------------------------------
+        public get id(): number {
+            return this._id;
+        }
+
+        // -------------------------------------------------------------------------
+        public get name(): string {
+            return this._name;
         }
     }
 }

@@ -1,18 +1,16 @@
 ﻿module Spriter {
 
-    export enum eFileType { XML, JSON, BIN }
-
-    export abstract class SpriterFile {
+    export class SpriterFile {
 
         protected _minimized: boolean;
         private _minDefs: any;
         private _minDefsStack: any[];
 
         // -------------------------------------------------------------------------
-        public abstract getNodes(nodeName: string): ISpriterNodeList;
-
-        // -------------------------------------------------------------------------
-        public abstract getType(): eFileType;
+        public getNodes(aNodeName: any): ISpriterNodeList
+        {
+            return aNodeName;
+        }
 
         // -------------------------------------------------------------------------
         public processed(): void {
@@ -20,14 +18,14 @@
         }
 
         // -------------------------------------------------------------------------
-        protected setMinimized(minimized: boolean, minDefs: any = null) {
-            this._minimized = minimized;
-            this._minDefs = minDefs;
+        protected setMinimized(aMinimized: boolean, aMinDefs: any = null) {
+            this._minimized = aMinimized;
+            this._minDefs = aMinDefs;
 
-            if (minimized) {
+            if (aMinimized) {
                 this._minDefsStack = [];
 
-                if (minDefs === null) {
+                if (aMinDefs === null) {
                     console.error("Spriter file is minimized - you must provide object with name definitions");
                     return;
                 }
@@ -35,56 +33,56 @@
         }
 
         // -------------------------------------------------------------------------
-        protected getFileNameWithoutExtension(path: string): string {
-            var name = (path.split('\\').pop().split('/').pop().split('.'))[0];
-            return name;
+        protected getFileNameWithoutExtension(aPath: string): string {
+            //var name = (aPath.split('\\').pop().split('/').pop().split('.'))[0];
+            return aPath;
         }
 
         // -------------------------------------------------------------------------
-        protected translateElementName(elementName: string): string {
+        protected translateElementName(aElementName: string): string {
             if (this._minimized) {
-                if (this._minDefs["name"] !== elementName) {
+                if (this._minDefs["name"] !== aElementName) {
                     console.warn("current definition is " + this._minDefs["name"]);
-                    return elementName;
+                    return aElementName;
                 }
 
                 if (this._minDefs["minName"] !== null) {
-                    elementName = this._minDefs["minName"];
+                    aElementName = this._minDefs["minName"];
                 }
             }
 
-            return elementName;
+            return aElementName;
         }
 
         // -------------------------------------------------------------------------
-        protected translateChildElementName(elementName: string): string {
+        protected translateChildElementName(aElementName: string): string {
             if (this._minimized && this._minDefs !== null) {
                 var elements = this._minDefs["childElements"];
                 if (elements !== null) {
-                    elementName = elements[elementName] === null ? elementName : elements[elementName]["minName"];
+                    aElementName = elements[aElementName] === null ? aElementName : elements[aElementName]["minName"];
                 }
             }
-            return elementName;
+            return aElementName;
         }
 
         // -------------------------------------------------------------------------
-        protected translateAttributeName(attributeName: string): string {
+        protected translateAttributeName(aAttributeName: string): string {
             if (this._minimized && this._minDefs !== null) {
                 var attributes = this._minDefs["attributes"];
                 if (attributes !== null) {
-                    attributeName = attributes[attributeName] === null ? attributeName : attributes[attributeName];
+                    aAttributeName = attributes[aAttributeName] === null ? aAttributeName : attributes[aAttributeName];
                 }
             }
-            return attributeName;
+            return aAttributeName;
         }
 
         // -------------------------------------------------------------------------
-        protected setMinDefsToElementName(tagName: string): void {
+        protected setMinDefsToElementName(aTagName: string): void {
             if (this._minimized) {
                 // save current level of min defs
                 this._minDefsStack.push(this._minDefs);
                 // get child definition and set it as current
-                var minDef = this._minDefs["childElements"][tagName];
+                var minDef = this._minDefs["childElements"][aTagName];
                 this._minDefs = minDef;
             }
         }

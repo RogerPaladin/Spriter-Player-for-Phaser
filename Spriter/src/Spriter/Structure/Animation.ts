@@ -1,81 +1,62 @@
-﻿/// <reference path="../IdNameMap.ts" />
-/// <reference path="Item.ts" />
-
-module Spriter {
+﻿module Spriter {
 
     export enum eAnimationLooping { NO_LOOPING, LOOPING };
 
-    export class Animation extends Item {
+    export class Animation {
         
+        private _id: number;
+        private _name: string;
+
         private _length: number;
         private _loopType: eAnimationLooping;
 
-        private _mainline: Baseline;
-        private _timelines: IdNameMap<Timeline>;
-        // other timelines for sound, events, tags, variables
-        private _lines: IdNameMap<Baseline>;
+        private _mainLineKeys: MainLineKey[] = [];
+        private _timelines: Helper.IdNameMap<Timeline>;
 
         // -------------------------------------------------------------------------
-        constructor(id: number, name: string, length: number, loopType: eAnimationLooping) {
-            super(id, name);
+        constructor(aId: number, aName: string, aLength: number, aLoopType: eAnimationLooping) {
+            this._id = aId;
+            this._name = aName;
 
-            this._length = length;
-            this._loopType = loopType;
+            this._length = aLength;
+            this._loopType = aLoopType;
 
-            this._timelines = new IdNameMap<Timeline>();
-            this._lines = new IdNameMap<Baseline>();
+            this._timelines = new Helper.IdNameMap<Timeline>();
         }
 
         // -------------------------------------------------------------------------
-        public get mainline(): Baseline {
-            return this._mainline;
+        public get mainLineKeys(): MainLineKey[] {
+            return this._mainLineKeys;
         }
 
         // -------------------------------------------------------------------------
-        public set mainline(mainline: Baseline) {
-            this._mainline = mainline;
+        public addMainLineKey(aMainLineKey: MainLineKey): void {
+            this._mainLineKeys.push(aMainLineKey);
         }
 
         // -------------------------------------------------------------------------
-        public addTimeline(timeline: Timeline): void {
-            this._timelines.add(timeline, timeline.id, timeline.name);
+        public addTimeline(aTimeline: Timeline): void {
+            this._timelines.add(aTimeline, aTimeline.id, aTimeline.name);
         }
 
         // -------------------------------------------------------------------------
-        public getTimelineById(id: number): Timeline {
-            return this._timelines.getById(id);
+        public getTimelineById(aId: number): Timeline {
+            return this._timelines.getById(aId);
         }
 
         // -------------------------------------------------------------------------
-        public getTimelineByName(name: string): Timeline {
-            return this._timelines.getByName(name);
+        public getTimelineByName(aName: string): Timeline {
+            return this._timelines.getByName(aName);
         }
 
         // -------------------------------------------------------------------------
-        public addLine(line: Baseline): void {
-            this._lines.add(line, this._lines.length, line.name);
+        public get id(): number {
+            return this._id;
         }
 
         // -------------------------------------------------------------------------
-        public getLineById(id: number): Baseline {
-            return this._lines.getById(id);
-        }
-
-        // -------------------------------------------------------------------------
-        public getLineByName(name: string): Baseline {
-            return this._lines.getByName(name);
-        }
-
-        // -------------------------------------------------------------------------
-        public get linesLength(): number {
-            return this._lines.length;
-        }
-
-        // -------------------------------------------------------------------------
-        public resetLines(): void {
-            for (var i = 0; i < this._lines.length; i++) {
-                this._lines.getById(i).reset();
-            }
+        public get name(): string {
+            return this._name;
         }
 
         // -------------------------------------------------------------------------

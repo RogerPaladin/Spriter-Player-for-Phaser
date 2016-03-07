@@ -1,22 +1,17 @@
-﻿/// <reference path="SpriterBone.ts" />
+/// <reference path="./SpriterBone.ts" />
 module Spriter {
 
     export class SpriterObject extends SpriterBone {
 
         private _spriter: Spriter;
-        private _charMapStack: CharMapStack;
         private _sprite: Phaser.Sprite;
 
-        private _file: File;
-        private _hide; boolean;
-
         // -------------------------------------------------------------------------
-        constructor(parent: SpriterGroup, sprite: Phaser.Sprite) {
+        constructor(aSpriter: Spriter, aSprite: Phaser.Sprite) {
             super();
 
-            this._spriter = parent.spriter;
-            this._charMapStack = parent.charMapStack;
-            this._sprite = sprite;
+            this._spriter = aSpriter;
+            this._sprite = aSprite;
         }
 
         // -------------------------------------------------------------------------
@@ -25,51 +20,27 @@ module Spriter {
         }
 
         // -------------------------------------------------------------------------
-        public setOn(on: boolean): void {
-            super.setOn(on);
+        public setOn(aOn: boolean): void {
+            super.setOn(aOn);
 
-            this._sprite.exists = on;
-            this._sprite.visible = (on && !this._hide);
+            this._sprite.exists = aOn;
+            this._sprite.visible = aOn;
         }
 
         // -------------------------------------------------------------------------
-        public setKey(entity: Entity, animation: Animation, timelineId: number, keyId: number): void {
-            super.setKey(entity, animation, timelineId, keyId);
+        public setKey(aAnimation: Animation, aTimelineId: number, aKeyId: number): void {
+            super.setKey(aAnimation, aTimelineId, aKeyId);
 
-            // set sprite - skip invisible objects - boxes, points
-            if (this.type === eObjectType.SPRITE) {
-                var spriteKey = (<KeyObject>this.key);
-                var file = this._spriter.getFolderById(spriteKey.folder).getFileById(spriteKey.file);
-                this._file = file;
-                this.setFile(file);
-            } else {
-                this._file = null;
-            }
+            // set sprite
+            var spriteKey = (<ObjectTimelineKey> this.key);
+            var file = this._spriter.getFolderById(spriteKey.folder).getFileById(spriteKey.file);
+                
+            this._sprite.frameName = file.name;
         }
 
         // -------------------------------------------------------------------------
-        public resetFile(): void {
-            if (this.type === eObjectType.SPRITE) {
-                this.setFile(this._file);
-            }
-        }
-
-        // -------------------------------------------------------------------------
-        private setFile(file: File): void {
-            file = this._charMapStack.getFile(file);
-
-            if (file !== null) {
-                this._hide = false;
-                this._sprite.frameName = file.name;
-            } else {
-                this._hide = true;
-                this._sprite.visible = false;
-            }
-        }
-
-        // -------------------------------------------------------------------------
-        public update(parent: SpatialInfo): void {
-            super.update(parent);
+        public update(aParent: SpatialInfo): void {
+            super.update(aParent);
 
             this.updateSprite();
         }
@@ -79,9 +50,9 @@ module Spriter {
             var t = this.transformed;
             var s = this.sprite;
 
-            s.position.set(t.x, t.y);
-            s.scale.set(t.scaleX, t.scaleY);
-            s.anchor.set(t.pivotX, t.pivotY);
+            s.position.setTo(t.x, t.y);
+            s.scale.setTo(t.scaleX, t.scaleY);
+            s.anchor.setTo(t.pivotX, t.pivotY);
 
             s.alpha = t.alpha;
             s.angle = t.angle;
